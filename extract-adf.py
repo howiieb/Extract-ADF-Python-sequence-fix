@@ -373,6 +373,14 @@ def write_data_sectors(
         if debug:
             debug_sector(out, sector)
 
+        if not 1 <= sector.seq_num <= MAX_SECTORS:
+            print(
+                f"Skipping data block at sector {sector.index}: seq_num "
+                f"{sector.seq_num} is out of range (expected 1..{MAX_SECTORS})",
+                file=sys.stderr,
+            )
+            continue
+
         header_key = sector.header_key
         header = sectors[header_key] if 0 <= header_key < len(sectors) else None
         output_path = header_paths.get(header_key)
